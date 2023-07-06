@@ -5,11 +5,14 @@
   <title>redirect</title>
 </head>
 <body>
-<script type="text/javascript">
-  let msg = /*[[${msg}]]*/ '';
-  let url = /*[[${url}]]*/ '/main';
-  alert(msg);
-  location.href=url;
+<script th:inline="javascript">
+  window.onload=function (){
+
+    let msg = [[${msg}]];
+    let url = [[${url}]];
+    alert(msg);
+    location.href=url;
+  }
 </script>
 <meta charset="UTF-8">
 </body>

@@ -8,11 +8,11 @@
     <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
 
-        // // 아이디 중복체크여부 (중복 Y / 중복아님 : N)
-        // let userIdCheck = "Y";
-        //
-        // // 이메일 중복체크 인증번호 발송 값
-        // let emailAuthNumber = "";
+        // 아이디 중복체크여부 (중복 Y / 중복아님 : N)
+        let userIdCheck = "Y";
+
+        // 이메일 중복체크 인증번호 발송 값
+        let emailAuthNumber = "";
 
         // HTML로딩이 완료되고, 실행됨
         $(document).ready(function () {
@@ -21,13 +21,13 @@
 
             // 아이디 중복체크
             $("#btnUserId").on("click", function () { // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
-           //     userIdExists(f)
+               userIdExists(f)
 
             })
 
             // 이메일 중복체크
             $("#btnEmail").on("click", function () { // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
-            //    emailExists(f)
+               emailExists(f)
 
             })
 
@@ -36,68 +36,73 @@
                 kakaoPost(f);
             })
 
+            //회원가입
+            $("#btnSend").on("click", function (){
+                doSubmit(f);
+            })
+
         })
 
-        // // 회원아이디 중복 체크
-        // function userIdExists(f) {
-        //
-        //     if (f.user_id.value === "") {
-        //         alert("아이디를 입력하세요.");
-        //         f.user_id.focus();
-        //         return;
-        //     }
-        //
-        //     // Ajax 호출해서 회원가입하기
-        //     $.ajax({
-        //             url: "/user/getUserIdExists",
-        //             type: "post", // 전송방식은 Post
-        //             dataType: "JSON", // 전송 결과는 JSON으로 받기
-        //             data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-        //             success: function (json) { // 호출이 성공했다면..
-        //
-        //                 if (json.exists_yn === "Y") {
-        //                     alert("이미 가입된 아이디가 존재합니다.");
-        //                     f.user_id.focus();
-        //
-        //                 } else {
-        //                     alert("가입 가능한 아이디입니다.");
-        //                     userIdCheck = "N";
-        //                 }
-        //
-        //             }
-        //         }
-        //     )
-        // }
-        //
-        // // 이메일 중복 체크
-        // function emailExists(f) {
-        //     if (f.email.value === "") {
-        //         alert("이메일을 입력하세요.");
-        //         f.email.focus();
-        //         return;
-        //     }
-        //
-        //     $.ajax({
-        //             url: "/user/getEmailExists",
-        //             type: "post", // 전송방식은 Post
-        //             dataType: "JSON", // 전송 결과는 JSON으로 받기
-        //             data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-        //             success: function (json) { // 호출이 성공했다면..
-        //
-        //                 if (json.exists_yn === "Y") {
-        //                     alert("이미 가입된 이메일 주소가 존재합니다.");
-        //                     f.email.focus();
-        //
-        //                 } else {
-        //                     alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
-        //                     emailAuthNumber = json.authNumber;
-        //
-        //                 }
-        //
-        //             }
-        //         }
-        //     )
-        // }
+        // 회원아이디 중복 체크
+        function userIdExists(f) {
+
+            if (f.user_id.value === "") {
+                alert("아이디를 입력하세요.");
+                f.user_id.focus();
+                return;
+            }
+
+            // Ajax 호출해서 회원가입하기
+            $.ajax({
+                    url: "/user/getUserIdExists",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                    success: function (json) { // 호출이 성공했다면..
+
+                        if (json.exists_yn === "Y") {
+                            alert("이미 가입된 아이디가 존재합니다.");
+                            f.user_id.focus();
+
+                        } else {
+                            alert("가입 가능한 아이디입니다.");
+                            userIdCheck = "N";
+                        }
+
+                    }
+                }
+            )
+        }
+
+        // 이메일 중복 체크
+        function emailExists(f) {
+            if (f.email.value === "") {
+                alert("이메일을 입력하세요.");
+                f.email.focus();
+                return;
+            }
+
+            $.ajax({
+                    url: "/user/getEmailExists",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                    success: function (json) { // 호출이 성공했다면..
+
+                        if (json.exists_yn === "Y") {
+                            alert("이미 가입된 이메일 주소가 존재합니다.");
+                            f.email.focus();
+
+                        } else {
+                            alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
+                            emailAuthNumber = json.authNumber;
+
+                        }
+
+                    }
+                }
+            )
+        }
 
         // 카카오 우편번호 조회 API 호출
         function kakaoPost(f) {
@@ -185,24 +190,24 @@
             }
 
             // Ajax 호출해서 회원가입하기
-            $.ajax({
-                    url: "/user/insertUserInfo",
-                    type: "post", // 전송방식은 Post
-                    dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-                    success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
-
-                        if (json.result === 1) { // 회원가입 성공
-                            alert(json.msg); // 메시지 띄우기
-                            location.href = "/user/login"; // 로그인 페이지 이동
-
-                        } else { // 회원가입 실패
-                            alert(json.msg); // 메시지 띄우기
-                        }
-
-                    }
-                }
-            )
+            // $.ajax({
+            //         url: "/user/insertUserInfo",
+            //         type: "post", // 전송방식은 Post
+            //         dataType: "JSON", // 전송 결과는 JSON으로 받기
+            //         data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+            //         success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+            //
+            //             if (json.result === 1) { // 회원가입 성공
+            //                 alert(json.msg); // 메시지 띄우기
+            //                 location.href = "/user/login"; // 로그인 페이지 이동
+            //
+            //             } else { // 회원가입 실패
+            //                 alert(json.msg); // 메시지 띄우기
+            //             }
+            //
+            //         }
+            //     }
+            // )
         }
 
     </script>
